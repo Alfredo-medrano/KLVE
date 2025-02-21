@@ -43,9 +43,14 @@
       <div class="letter" id="letter-content"></div>
     </div>
 
+    <!-- Agregamos el audio oculto -->
+    <audio id="loveSong" src="./Humbe – Amor de Cine (letra).mp3"></audio>
+
     <script>
       let frases = [];
       let isOpen = false;
+      let musicInterval; // Variable para controlar el temporizador
+      const music = document.getElementById("loveSong");
 
       async function loadFrases() {
         try {
@@ -79,6 +84,9 @@
 
         if (isOpen) {
           showHearts(); // Mostrar corazones al abrir la carta
+          playMusic();  // Reproducir la música
+        } else {
+          stopMusic(); // Detener la música si se cierra la carta
         }
       }
 
@@ -95,6 +103,25 @@
             heart.remove();
           }, 3000);
         }
+      }
+
+      function playMusic() {
+        music.currentTime = 0; // Reiniciar la canción
+        music.play().catch(error => console.log("Reproducción automática bloqueada:", error));
+
+        // Detener cualquier intervalo anterior
+        clearInterval(musicInterval);
+
+        // Reiniciar la música cada 30 segundos mientras la carta esté abierta
+        musicInterval = setInterval(() => {
+          music.currentTime = 0; 
+          music.play();
+        }, 30000);
+      }
+
+      function stopMusic() {
+        music.pause();
+        clearInterval(musicInterval); // Detener el reinicio automático
       }
 
       loadFrases();
